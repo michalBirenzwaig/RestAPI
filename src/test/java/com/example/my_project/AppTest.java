@@ -4,26 +4,31 @@ import org.testng.annotations.Test;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
-public class AppTest {
+import javax.xml.ws.Response;
+
+public class EmployeeApiTest {
     private static final String BASE_URL = "https://dummy.restapiexample.com/api/v1";
 
     @Test
     public void testCreateNewEmployee() {
-        String requestBody = "{\"name\":\"John Doe\",\"salary\":\"50000\",\"age\":\"30\"}";
+        String requestBody = "{\"name\":\"Michal\",\"salary\":\"50800\",\"age\":\"30\"}";
 
-        given()
+        Response response = given()
                 .contentType("application/json")
                 .body(requestBody)
                 .when()
                 .post(BASE_URL + "/create")
                 .then()
-                .statusCode(200)
-                .body("status", equalTo("success"))
-                .body("data.name", equalTo("John Doe"))
-                .body("data.salary", equalTo("50000"))
-                .body("data.age", equalTo("30"))
-                .body("data.id", not(empty()))
-                .body("data.profile_image", isEmptyOrNullString())
-                .body("data.message", equalTo("Successfully! Record has been added."));
+                .extract().response();
+
+        assertEquals(response.getStatusCode(), 200);
+        assertEquals(response.jsonPath().getString("status"), "success");
+        assertEquals(response.jsonPath().getString("data.name"), "Michal");
+        assertEquals(response.jsonPath().getString("data.salary"), "50800");
+        assertEquals(response.jsonPath().getString("data.age"), "30");
+        assertNotNull(response.jsonPath().getString("data.id"));
+        assertEquals(response.jsonPath().getString("data.profile_image"), "");
+        assertEquals(response.jsonPath().getString("message"), "Successfully! Record has been added.");
+
     }
 }
