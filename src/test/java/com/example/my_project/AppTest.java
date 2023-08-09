@@ -6,7 +6,7 @@ import static org.hamcrest.Matchers.*;
 
 import javax.xml.ws.Response;
 
-public class EmployeeApiTest {
+public class AppTest {
     private static final String BASE_URL = "https://dummy.restapiexample.com/api/v1";
 
     @Test
